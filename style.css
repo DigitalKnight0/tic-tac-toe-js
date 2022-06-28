@@ -1,0 +1,36 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    border: 1px solid black;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main{
+    flex: 1;
+    display: flex;
+}
+
+.stats{
+    flex: 1;
+}
+
+.wrapper{
+    flex: 4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid{
+    height: 400px;
+    width: 400px;
+    display: grid;
+    grid-template: 1fr 1fr 1fr/ 1fr 1fr 1fr;
+    border: 1px solid black;
+}
