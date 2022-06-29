@@ -2,14 +2,50 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    border: 1px solid black;
 }
+
 
 body{
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background: linear-gradient(180deg, blue, yellow, green);
+    font-family: 'Roboto', sans-serif;
 }
+
+.content{
+    flex: 1;
+    display: flex;
+}
+
+.content > * {
+    transition: all 0.5s;
+    transition-timing-function: ease-out;
+}
+
+.intro, .mode-select, .icon-select{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.intro > p, .mode-select > p, .icon-select>p {
+    font-family: 'Lobster', cursive;
+    font-size: 1.4rem;
+    background-color: rgba(0, 0, 0, 0.342);
+    padding: 8px;
+}
+
+.mode-select > div, .icon-select>div{
+    width: 50%;
+    padding: 10px;
+    display: flex;
+    justify-content: space-around;
+}
+
 
 .main{
     flex: 1;
@@ -18,6 +54,34 @@ body{
 
 .stats{
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8px;
+    gap: 20px;
+    background-color: rgba(0, 0, 0, 0.356);
+
+}
+
+.stats>.winner{
+    height: 50px;
+}
+
+.stats > div{
+    display: flex;
+    height: 20%;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.stats p{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: aliceblue;
 }
 
 .wrapper{
@@ -33,4 +97,45 @@ body{
     display: grid;
     grid-template: 1fr 1fr 1fr/ 1fr 1fr 1fr;
     border: 1px solid black;
+}
+
+.grid>*{
+    font-size: 1.3rem;
+    background-color: rgba(0, 0, 0, 0.356);
+    color: white;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid white;
+}
+
+
+button{
+    width: 18vw;
+    padding: 8px;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    background-color: #FF0080;
+    color: white;
+    font-weight: bold;
+    border: 1px solid white;
+    transition: 0.3s all;
+}
+
+button:hover{
+    transform: scale(1.05, 1.05);
+    opacity: 0.7;
+}
+
+.hidden{
+    width: 0px;
+    flex: 0;
+    overflow: hidden;
+    border: none;
+    transition: all 1s;
+}
+
+.hidden *{
+    display: none;
 }

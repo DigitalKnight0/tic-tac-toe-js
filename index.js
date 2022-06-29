@@ -51,16 +51,16 @@ const GameBoard = (function(){
     }
 })()
 
-const Player = (marker, name) => {
+const Player = (name, marker) => {
     let score = 0
     function addScore(){score++}
     function getScore(){return score}
     function resetScore(){score = 0}
-    return {marker, name, addScore, getScore, resetScore}
+    return {name, marker, addScore, getScore, resetScore}
 }
 
-const Bot = (mark, bname) => {
-    const prototype = Player(mark, bname)
+const Bot = (bname, mark) => {
+    const prototype = Player(bname, mark)
     
     function getRandomChoice(board){
         const emptySpots = board.map((entry, index) => index).filter(spot => board[spot] === '')
@@ -78,10 +78,6 @@ const Game = (function(){
     let currentPlayer
     let gameMode;
 
-    (function(){
-        grid.addEventListener('click', _handleCellClick)
-    })()
-
     function _refreshGrid(board){
         grid.innerHTML = ''
         board.forEach((entry, index) => {
@@ -92,29 +88,34 @@ const Game = (function(){
         })
     }
 
-    function _getMarker(){
+    function _makePlayerMove(index){
+        GameBoard.markBoard(currentPlayer.marker, index)
+        if(GameBoard.checkWin()){
+            _handleWin()
+            return true
+        }
         currentPlayer = currentPlayer === p1 ? p2 : p1
-        if(gameMode === 'pvb') return p1.marker
-        return currentPlayer.marker
     }
 
-    function _makeBotMove(e){
+    function _makeBotMove(){
         if(gameMode !== 'pvb') return
-        const randomIndex = p2.getRandomChoice(GameBoard.getBoard())
-        GameBoard.markBoard(p2.marker, randomIndex)
-        if(GameBoard.checkWin()) _handleWin()
+        const randomIndex = currentPlayer.getRandomChoice(GameBoard.getBoard())
+        GameBoard.markBoard(currentPlayer.marker, randomIndex)
+        if(GameBoard.checkWin()){
+            _handleWin()
+            return
+        }
+        currentPlayer = currentPlayer === p1 ? p2 : p1
     }
 
     function _handleCellClick(e){
         if(!e.target.hasAttribute('data-index')) return
         const index = Number(e.target.getAttribute('data-index'))
-        if(!GameBoard.getSpotStatus(index)) return
-        const marker = _getMarker()
-        GameBoard.markBoard(marker, index)
-        _makeBotMove(e)
+        if(!GameBoard.getSpotStatus(index)) return 
+        if(_makePlayerMove(index)) return
+        _makeBotMove()
         _refreshGrid(GameBoard.getBoard())
-        if(GameBoard.checkWin()) _handleWin()
-        else if(GameBoard.checkDraw()) _handleDraw()
+        if(GameBoard.checkDraw()) _handleDraw()
     }
 
     function _handleWin(){
@@ -132,24 +133,22 @@ const Game = (function(){
         document.querySelector('.p1').textContent = `${p1.name}'s Score: ${p1.getScore()}`
         document.querySelector('.p2').textContent = `${p2.name}'s Score: ${p2.getScore()}`
         GameBoard.resetBoard()
+        currentPlayer = p1
+        if(p1.name === 'Bot') _makeBotMove()
         _refreshGrid(GameBoard.getBoard())
-        currentPlayer = p2
     }
 
     function _handleDraw(){
         GameBoard.resetBoard()
         _refreshGrid(GameBoard.getBoard())
-        currentPlayer = p2
+        currentPlayer = p1
     }
 
-    function initGame(p1Marker, p2Marker, gameType){
-        if(gameType === 'pvp'){
-            p1 = Player(p1Marker ,'Player 1')
-            p2 = Player(p2Marker ,'Player 2')
-        } else {
-            p1 = Player(p1Marker ,'Human')
-            p2 = Bot(p2Marker ,'Bot')
-        }
+    function initGame(player1, player2, gameType){
+        grid.addEventListener('click', _handleCellClick)
+        document.querySelector('.winner').textContent = "Let's Play"
+        p1 = player1
+        p2 = player2
         gameMode = gameType
         _newRound()
     }
@@ -157,7 +156,8 @@ const Game = (function(){
     function resetGame(){
         p1.resetScore()
         p2.resetScore()
-        _newRound()
+        currentPlayer = null
+        initGame(p1, p2, gameMode)
     }
 
     return {
@@ -166,7 +166,61 @@ const Game = (function(){
     }
 })()
 
-Game.initGame('X', 'O', 'pvp')
+const Display = (function(){
+    const startBtn = document.querySelector('.start')
+    const pvpBtn = document.querySelector('.pvp')
+    const pvbBtn = document.querySelector('.pvb')
+    const iconXBtn = document.querySelector('.x')
+    const iconOBtn = document.querySelector('.o')
+    const resetBtn = document.querySelector('.reset')
+    const returnBtn = document.querySelector('.return')
+    let gameType
+
+    function _addListeners(){
+        startBtn.addEventListener('click', _openModeMenu)
+        pvpBtn.addEventListener('click', _openIconMenu)
+        pvbBtn.addEventListener('click', _openIconMenu)
+        iconXBtn.addEventListener('click', _startGame)
+        iconOBtn.addEventListener('click', _startGame)
+        resetBtn.addEventListener('click', Game.resetGame)
+        returnBtn.addEventListener('click', _returnToMain)
+    }
+
+    function _openModeMenu(){
+        document.querySelector('.intro').classList.add('hidden')
+        document.querySelector('.mode-select').classList.remove('hidden')
+    }
+
+    function _openIconMenu(e){
+        document.querySelector('.mode-select').classList.add('hidden')
+        document.querySelector('.icon-select').classList.remove('hidden')
+        gameType = e.target.classList[0]
+    }
+
+    function _startGame(e){
+        let player1
+        let player2
+        document.querySelector('.icon-select').classList.add('hidden')
+        document.querySelector('.main').classList.remove('hidden')
+        if(e.target.textContent === 'X'){
+            player1 = Player('Player 1', 'X')
+            player2 = gameType === 'pvp' ? Player('Player 2', 'O') : Bot('Computer', 'O')
+        } else{
+            player2 = Player('Player 1', 'O')
+            player1 = gameType === 'pvp' ? Player('Player 2', 'X') : Bot('Bot', 'X')
+        }
+        Game.initGame(player1, player2, gameType)
+    }
+
+    function _returnToMain(){
+        document.querySelector('.main').classList.add('hidden')
+        document.querySelector('.intro').classList.remove('hidden')
+    };
+
+    (function(){
+        _addListeners()
+    })()
+})()
 
 
 

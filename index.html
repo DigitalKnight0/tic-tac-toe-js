@@ -4,22 +4,48 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Roboto:wght@100;300;400&display=swap" rel="stylesheet">
     <script src="./index.js" defer></script>
     <link rel="stylesheet" href="./style.css">
     <title>Document</title>
 </head>
 <body>
-    <div class="header"></div>
-    <div class="main">
-        <div class="stats">
-            <p class="winner"></p>
-            <div class="scores">
-                <p class="p1">p1 Score = 0</p>
-                <p class="p2">p2 Score = 0</p>
+    <div class="content">
+        <div class="intro">
+            <p class="welcome">Welcome to Tic Tac Toe. Press start to begin the game!</p>
+            <button class="start">Play Game</button>
+        </div>
+        <div class="mode-select hidden">
+            <p class="mode-info">Select Play Mode</p>
+            <div>
+                <button class="pvp">Player vs Player</button>
+                <button class="pvb">Player vs Bot</button>
             </div>
         </div>
-        <div class="wrapper">
-            <div class="grid"></div>
+        <div class="icon-select hidden">
+            <p class="icon-info">Select Icon for Player 1</p>
+            <div>
+                <button class="x">X</button>
+                <button class="o">O</button>
+            </div>
+        </div>
+        <div class="main hidden">
+            <div class="stats">
+                <p class="winner">Sanagi</p>
+                <div class="scores">
+                    <p class="p1">p1 Score = 0</p>
+                    <p class="p2">p2 Score = 0</p>
+                </div>
+                <div>
+                    <button class="reset">Replay</button>
+                    <button class="return">Return to main</button>
+                </div>
+            </div>
+            <div class="wrapper">
+                <div class="grid"></div>
+            </div>
         </div>
     </div>
 </body>
